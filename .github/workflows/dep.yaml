@@ -1,6 +1,6 @@
 name: deploy
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -20,10 +20,9 @@ jobs:
             #     - name: Upload coverage to Codecov
             #       run: bash <(curl -s https://codecov.io/bash)
       - name: Upload coverage report
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.txt
+          file: ./coverage.tx
       - name: Build
         run: go build -o bin/tgbot cmd/smart48bot/main.go
       - name: Install SSH Key
@@ -32,7 +31,7 @@ jobs:
          key: ${{ secrets.SERV_SMART48_KEY }}
          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
       - name: Adding Known Hosts
-        run: ssh-keyscan -p ${{ secrets.SERV_SMART48_PORT }} -H ${{ secrets.SERV_SMART48_HOST }} >> ~/.ssh/known_hosts
+        run: ssh-keyscan -p ${{ secrets.ERV_SMART48_PORT }} -H ${{ secrets.SERV_SMART48_HOST }} >> ~/.ssh/known_hosts
       - name: rsync deployments
         uses: burnett01/rsync-deployments@5.2
         with:
@@ -40,7 +39,7 @@ jobs:
           path: bin/tgbot
           remote_path: /var/www/bin
           remote_host: ${{ secrets.SERV_SMART48_HOST }}
-          remote_port: ${{ secrets.SERV_SMART48_PORT }}
+          remote_port: ${{ secrets.ERV_SMART48_PORT }}
           remote_user: ${{ secrets.SERV_SMART48_USER }}
           remote_key: ${{ secrets.SERV_SMART48_KEY }}
           remote_key_pass: ${{ secrets.SERV_SMART48_KEY_PASS }}
