@@ -40,7 +40,7 @@ jobs:
           path: bin/tgbot
           remote_path: /var/www/bin
           remote_host: ${{ secrets.SERV_SMART48_HOST }}
-          remote_port: ${{ secrets.ERV_SMART48_PORT }}
+          remote_port: ${{ secrets.SERV_SMART48_PORT }}
           remote_user: ${{ secrets.SERV_SMART48_USER }}
           remote_key: ${{ secrets.SERV_SMART48_KEY }}
           remote_key_pass: ${{ secrets.SERV_SMART48_KEY_PASS }}
