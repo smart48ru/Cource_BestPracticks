@@ -33,7 +33,7 @@ jobs:
          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
       - name: Adding Known Hosts
         run: ssh-keyscan -p ${{ secrets.SERV_SMART48_PORT }} -H ${{ secrets.SERV_SMART48_HOST }} >> ~/.ssh/known_hosts
-      - name: rsync deployments
+      - name: Rsync deployments
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete
@@ -50,7 +50,7 @@ jobs:
           host: ${{ secrets.SERV_SMART48_HOST }}
           username: ${{ secrets.SERV_SMART48_USER }}
           key: ${{ secrets.SERV_SMART48_KEY}}
-          port: ${{ secrets.ERV_SMART48_PORT }}
+          port: ${{ secrets.SERV_SMART48_PORT }}
           passphrase: ${{ secrets.SERV_SMART48_KEY_PASS }}
           script: |
             touch /var/www/bin/restart.fl
