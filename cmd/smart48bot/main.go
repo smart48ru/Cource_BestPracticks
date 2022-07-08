@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"smart48-telegram-bot/internal/config"
 	"smart48-telegram-bot/internal/http_API"
 	"smart48-telegram-bot/internal/telegram_bot"
-	"sort"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -27,21 +25,6 @@ func main() {
 	go restarted()
 	go listenChannels()
 	bot.WaitG().Wait()
-}
-
-func printCounter(counter map[int]int) {
-	digits := make([]int, 0)
-	for d := range counter {
-		digits = append(digits, d)
-	}
-	sort.Ints(digits)
-	for idx, digit := range digits {
-		fmt.Printf("%d:%d", digit, counter[digit])
-		if idx < len(digits)-1 {
-			fmt.Print(" ")
-		}
-	}
-	fmt.Print("\n")
 }
 
 // restarted - функция автоматического выхода из программы если файл существует
