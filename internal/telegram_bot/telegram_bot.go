@@ -98,7 +98,8 @@ func (b *BotStruct) SetWebHook() {
 	//if err != nil {
 	//	log.Error().Err(err)
 	//}
-	tgBotAPI.NewWebhookWithCert(str, b.cert)
+	b.bot.SetWebhook(tgBotAPI.NewWebhookWithCert(str, b.cert))
+	//tgBotAPI.NewWebhookWithCert(str, b.cert)
 	info, err := b.bot.GetWebhookInfo()
 	if err != nil {
 		log.Error().Err(err)
