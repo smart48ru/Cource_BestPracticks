@@ -63,6 +63,7 @@ func NewBot(conf Configurator) *BotStruct {
 	log.Info().Msgf("Authorized on account %s", bot.Self.UserName)
 	tgBot := new(BotStruct)
 	tgBot.bot = bot
+	tgBot.token = conf.BotToken()
 	tgBot.addr = conf.BotAddress()
 	tgBot.port = conf.BotPort()
 	tgBot.cert = conf.Cert()
