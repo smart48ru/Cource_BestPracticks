@@ -94,10 +94,10 @@ func NewBot(conf Configurator) *BotStruct {
 func (b *BotStruct) SetWebHook() {
 	time.Sleep(time.Second * 2) //nolint:gomnd    // устанавливаем WebHook c задержкой, что бы не было ошибки
 	str := fmt.Sprintf("https://%s/%s", b.addr, b.token)
-	_, err := b.bot.RemoveWebhook()
-	if err != nil {
-		log.Error().Err(err)
-	}
+	//_, err := b.bot.RemoveWebhook()
+	//if err != nil {
+	//	log.Error().Err(err)
+	//}
 	tgBotAPI.NewWebhookWithCert(str, b.cert)
 	info, err := b.bot.GetWebhookInfo()
 	if err != nil {
