@@ -1,0 +1,9 @@
+bin
+.DS_Store
+.idea/
+main
+cert.crt
+cert.key
+smart48bot.yaml
+smart48bot.log
+*.log

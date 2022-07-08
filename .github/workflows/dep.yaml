@@ -1,0 +1,57 @@
+name: deploy
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+
+      - name: Verify dependencies
+        run: go mod verify
+      - name: Run coverage
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic --tags=integration ./...
+            #     - name: Upload coverage to Codecov
+            #       run: bash <(curl -s https://codecov.io/bash)
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
+      - name: Build
+        run: go build -o bin/tgbot cmd/smart48bot/main.go
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+         key: ${{ secrets.SERV_SMART48_KEY }}
+         known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -p ${{ secrets.SERV_SMART48_PORT }} -H ${{ secrets.SERV_SMART48_HOST }} >> ~/.ssh/known_hosts
+      - name: Rsync deployments
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avzr --delete
+          path: bin/tgbot
+          remote_path: /var/www/bin
+          remote_host: ${{ secrets.SERV_SMART48_HOST }}
+          remote_port: ${{ secrets.SERV_SMART48_PORT }}
+          remote_user: ${{ secrets.SERV_SMART48_USER }}
+          remote_key: ${{ secrets.SERV_SMART48_KEY }}
+          remote_key_pass: ${{ secrets.SERV_SMART48_KEY_PASS }}
+      - name: Remote restart bot
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERV_SMART48_HOST }}
+          username: ${{ secrets.SERV_SMART48_USER }}
+          key: ${{ secrets.SERV_SMART48_KEY}}
+          port: ${{ secrets.SERV_SMART48_PORT }}
+          passphrase: ${{ secrets.SERV_SMART48_KEY_PASS }}
+          script: |
+            touch /var/www/bin/restart.fl
+            chmod 666 /var/www/bin/restart.fl
